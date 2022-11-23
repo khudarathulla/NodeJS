@@ -2,15 +2,10 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
-const sql = require('mysql2/promise');
-const { createConnection } = require("mysql2");
 const PORT = process.env.PORT || 8080;
-const sqlConfig = {
-    host: 'localhost',
-    user: 'root',
-    password: 'Qudrat$haik@786',
-    database: 'mysqldb',
-}
+
+const userRouter = require("./routes/users.routes")
+app.use(userRouter)
 
 app.use(cors());
 
@@ -22,17 +17,7 @@ app.get("/", (req, res) => {
     res.send({ message: "Hello World" });
 });
 
-app.get("/get-users", async (req, res) => {
-    try {
-        // make sure that any items are correctly URL encoded in the connection string
-        const connection = await sql.createConnection(sqlConfig);
-        const result = await connection.execute(`SELECT * FROM employees;`)
-        const records=result[0];
-        res.status(200).send({ "Message": "Success", records })
-    } catch (err) {
-        res.status(500).send({ "Message": "Something went wrong" })
-    }
-})
+
 
 app.put("/put-users", async (req,res) =>{
     try {
